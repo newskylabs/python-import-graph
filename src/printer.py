@@ -24,7 +24,7 @@ Functionality to print Python import graph.
 
 def print_as_indented_list(import_graph):
     for filename, filenames in import_graph.items():
-        print(f"  {filename}:")
+        print(f"  {filename}")
 
         for filename in filenames:
             print(f"    {filename}")
