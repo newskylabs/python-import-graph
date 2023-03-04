@@ -29,9 +29,10 @@ __license__ = "Apache License 2.0, http://www.apache.org/licenses/LICENSE-2.0"
 __date__ = "2023/02/26"
 
 import sys
-import os.path
 import click
 import ast
+
+from finder import find_imported_file
 
 from printer import (
     print_in_graphviz_dot_format,
@@ -202,51 +203,6 @@ def resolve_relative_module(directory, level, module):
         # Import level too high
         # for the given directory
         return None
-
-
-def find_imported_file(name, module=None):
-    """Get the longest filename corresponding to the given module and name."""
-
-    if module is not None:
-        # Example:
-        # module:   "foo.bar.baz"
-        # name:     "boo"
-        # => path:  ["foo", "bar", "baz", "boo"]
-        path = module.split(".")
-        path.append(name)
-
-    else:
-        # Example:
-        # name:     "one.two.three"
-        # => path:  ["one", "two", "three"]
-        path = name.split(".")
-
-    # Get existing file
-    # Return filename of existing file
-    # corresponding to the longest existing subpath
-    lpath = len(path)
-    for i in range(lpath):
-        subpath = path[: lpath - i]
-
-        dirname = "/".join(subpath)
-
-        # Does a file with the given filename exist?
-        filename = dirname + ".py"
-        if os.path.isfile(filename):
-            # When a file with this name exists
-            # return the filename
-            return filename
-
-        # Does a dir with the given dirname exist?
-        elif os.path.isdir(dirname):
-            filename = dirname + "/__init__.py"
-            if os.path.isfile(filename):
-                # When a file with this name exists
-                # return the filename
-                return filename
-
-    # No file for the given module / name combination found
-    return None
 
 
 if __name__ == "__main__":
