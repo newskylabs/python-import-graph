@@ -1,0 +1,24 @@
+
+[project]
+name = "python-import-graph"
+version = "2023.02.26"
+description = "Show the local import graph given a Python source file and directory"
+authors = [
+    {name = "Dietrich Bollmann", email = "dietrich@newskylabs.net"},
+]
+dependencies = []
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+
+[project.scripts]
+python-import-graph = "python_import_graph:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+
+[tool.pdm.build]
+package-dir = "src"
