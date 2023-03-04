@@ -33,6 +33,11 @@ import os.path
 import click
 import ast
 
+from printer import (
+    print_in_graphviz_dot_format,
+    print_as_indented_list,
+)
+
 
 @click.command()
 @click.argument("filename", type=click.Path(exists=True))
@@ -45,29 +50,10 @@ def main(filename, dot):
     import_graph = calculate_import_graph(filename)
 
     if dot:
-        print("digraph {")
-        for filename, filenames in import_graph.items():
-            print(f'  "{filename}" -> {{')
+        print_in_graphviz_dot_format(import_graph)
 
-            for filename in filenames:
-                print(f'    "{filename}"')
-
-            print("  }")
-
-        print("}")
-
-        sys.exit(0)
-
-    print("")
-    print("Import graph:")
-    print("")
-    for filename, filenames in import_graph.items():
-        print(f"  {filename}:")
-
-        for filename in filenames:
-            print(f"    {filename}")
-
-        print("")
+    else:
+        print_as_indented_list(import_graph)
 
 
 def calculate_import_graph(filename):
