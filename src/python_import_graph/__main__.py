@@ -15,7 +15,7 @@
 # limitations under the License.
 # ----------------------------------------------------------
 
-"""src/python_import_graph.py
+"""src/python_import_graph/__main__.py:
 
 Python import graph.
 
