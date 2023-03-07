@@ -10,13 +10,21 @@
 #   - PDM
 #     https://pdm.fming.dev/latest/
 # 
+#   - Working with version control
+#     https://pdm.fming.dev/latest/usage/project/#working-with-version-control
+# 
 #   - Working with PEP 582
 #     https://pdm.fming.dev/latest/usage/pep582/
 # 
 # PDM will write and store project-wide configurations in .pdm.toml
 # and you are recommended to add following lines in the .gitignore:
+
 .pdm.toml
 __pypackages__/
+
+# You should be committing the pdm.lock file, by doing so you ensure
+# that all installers are using the same versions of dependencies.
+#| pdm.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
