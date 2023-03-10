@@ -56,70 +56,63 @@ def get_imported_files(filename):
 
         p = ast.parse(source, filename=filename, mode="exec")
 
-        imported_files = process_body(directory, p)
+        imported_files = process_body(directory, p, [])
 
         return imported_files
 
     return None
 
 
-def process_body(directory, e):
-    imported_files = process_elements(directory, e.body)
+def process_body(directory, e, imported_files):
+    imported_files = process_elements(directory, e.body, imported_files)
 
     return imported_files
 
 
-def process_elements(directory, elts):
-    imported_files = set()
-
+def process_elements(directory, elts, imported_files):
     for e in elts:
-        imported_files2 = process_element(directory, e)
-
-        if imported_files2 is not None:
-            imported_files = imported_files.union(imported_files2)
+        imported_files = process_element(directory, e, imported_files)
 
     return imported_files
 
 
-def process_element(directory, e):
-    if isinstance(e, ast.Import):
-        # DEBUG
-        # print(ast.dump(e, indent=4))
+def process_element(directory, e, imported_files):
+    # DEBUG
+    # | print(ast.dump(e, indent=4))
 
-        return get_imported_files_from_Import(e)
+    if isinstance(e, ast.Import):
+        return get_imported_files_from_Import(e, imported_files)
 
     elif isinstance(e, ast.ImportFrom):
-        # DEBUG
-        # print(ast.dump(e, indent=4))
-
-        return get_imported_files_from_ImportFrom(directory, e)
+        return get_imported_files_from_ImportFrom(directory, e, imported_files)
 
     elif hasattr(e, "body"):
-        # DEBUG
-        # print(ast.dump(e, indent=4))
+        return process_body(directory, e, imported_files)
 
-        return process_body(directory, e)
+    else:
+        return imported_files
 
 
-def get_imported_files_from_Import(import_statement):
+def get_imported_files_from_Import(import_statement, imported_files):
     # DEBUG
     # | print(ast.dump(import_statement, indent=4))
 
     names = import_statement.names
 
-    imported_files = set()
     for name in names:
         name = name.name
 
         filename = find_imported_file(name)
 
-        if filename is not None:
-            imported_files.add(filename)
+        if filename is not None and filename not in imported_files:
+            imported_files.append(filename)
 
     return imported_files
 
 
-def get_imported_files_from_ImportFrom(directory, import_statement):
+def get_imported_files_from_ImportFrom(
+    directory, import_statement, imported_files
+):
     # DEBUG
     # | print(ast.dump(import_statement, indent=4))
 
@@ -138,7 +131,6 @@ def get_imported_files_from_ImportFrom(directory, import_statement):
         print("")
         sys.exit(1)
 
-    imported_files = set()
     for name in names:
         name = name.name
 
@@ -150,8 +142,8 @@ def get_imported_files_from_ImportFrom(directory, import_statement):
         # |     f' => "{filename}"'
         # | )
 
-        if filename is not None:
-            imported_files.add(filename)
+        if filename is not None and filename not in imported_files:
+            imported_files.append(filename)
 
     return imported_files
 
